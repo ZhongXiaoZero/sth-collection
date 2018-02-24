@@ -1,0 +1,36 @@
+1、跨域出现及问题解决汇总
+
+原由：同源政策的推行，“同源”指的是：1、协议相同；2、域名相同；3、端口相同。目的是为了保证用户信息的安全，防止恶意的网站窃取数据。如果没有“同源政策”，Cookie就可以共享，互联网便毫无安全可言了。后来“同源政策”变得越来越严格。目前，如果非同源，有三种行为会受到限制。
+(1)Cookie、LoacalStorage和IndexDB无法读取。
+(2)DOM无法获得。
+(3)AJAX请求不能发送。
+
+问题解决：
+	1、CORS，全称是“跨域资源共享”（Cross-origin resource sharing）。它允许浏览器向跨源服务器，发出XMLHttpRequest请求，从而克服了AJAX稚嫩只能同源使用的限制。目前，所有浏览器都支持该功能，IE浏览器不能低于IE10。
+	2、JSONP，因为<script>脚本拥有跨域能力。但是它只能是get请求，不能进行较为复杂的post请求和其他请求，所以事实上这方法已基本淘汰。
+	3、PHP后台配置。
+	4、Node.js后台配置（express框架）。
+	5、JAVA后台配置
+	6、document.domain
+
+2、脏检查及脏检查步骤
+
+脏检查 ———— 一种只关心在特定的检查阶段数据是否改变的数据监听技术
+
+步骤：
+（1）设置标记 dirty = false
+ (2) 遍历所有通过component.$watch绑定的数据观察者watcher，对比当前值watcher.get(component)与老值watcher.last.如果值发生改变，运行绑定的监听器 —— watcher.fn(newvalue,oldvalue),并使__dirty__=true.设置watch.last=newvalue,然后进入下一个watcher的检查。
+ (3)遍历检查一轮后，如果ditry===true，进入（1），否则进入（4）。
+ (4)完成脏检查
+
+何时进入脏检查
+当我们对对象进行赋值时，我们是无法知道数据发生改变了的，所以disgest阶段必然是主动进入的。在regularjs中， digest阶段是由$update方法触发的.
+
+
+3、理解redux中的props和state。
+
+props是一个父组件传递给子组件的数据流，这个数据流可以一直传递到子孙组件。而state代表的是一个组件内部自身的状态（可以是父组件、子孙组件）。首先先说一下react-redux中是如何维护state的额，react-redux提供两个关键模块：Provider和connect。
+
+Provider —— 接受Redux的store作为props，并将其声明为context的属性之一。将store放在context里是为了给connect用的。Provider做了这样的操作，在原应用组件上包裹一层，使原来整个组件成为Provider的子组件，接收Redux的store作为props，通过context对象传递给子孙组件上的connect
+
+Connect —— 真正意义上连接了Redux和React，它包在我们的容器组件的外一层，它接收上面 Provider 提供的 store 里面的 state 和 dispatch，传给一个构造函数，返回一个对象，以属性形式传给我们的容器组件。
