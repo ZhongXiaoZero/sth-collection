@@ -1,0 +1,48 @@
+今天是做react生命周期专题，由于使用react的话，毫无疑问要对其生命周期和生命周期函数的用法熟悉才可以更好的开发，而不是盲目的，所以今天会集中讨论关于react生命周期。
+
+React严格定义了组件的生命周期会经历如下三个过程：
+。装载过程（Mount），组件第一次在DOM树渲染的过程。
+。更新过程（Update），当组件被重新渲染的过程。
+。卸载过程（Unmount），组件从DOM树中删除的过程。
+
+装载过程，该过程会依次调用如下函数：
+1、constructor():ES6类的构造函数（为了初始化state或者绑定this）
+
+（1）在constructor里面调用super是否是必要的？
+
+ ————仅当存在constructor的时候必须调用super，如果没有，则无需。如果你存在constructor,而不执行super的话，如果使用state的话就会因未初始化state报错
+
+（2）super与super(props)的区别？
+
+ ————将props传入super的作用是可以使你在constructor内访问。如果不用在constrcutor里面无需要用props就无需调用，因为React会自动为你设置好，在别的地方亦可调用
+
+
+ 2、getInitialState():ES5中初始化state。
+ 3、getDefaultProps():ES5中初始化props。
+ 4、componentWillMount():在组件被挂载前调用。只执行一次。dom还没有渲染到html文档里面
+ 5、render():渲染组件，必须实现该方法。
+ 6、componentDidMount():组件装载后调用。这时已经生成真实的DOM节点。只执行一次。
+
+ 更新过程
+
+ 当组件的props或者state改变时就会触发组件的更新过程。更新过程会经过下面函数：
+ 1、componenntWillReceiveProps(nextProps);当父组件的render()执行后就会触发此方法。初始化不调用。用此方法可以比较this.props和nextProps来看是否发生了变化，然后可以进行setState等操作。
+ 2、shouldComponentUpdate(nextProps,nextState):当props改变或state改变时调用，初始化不调用，返回boolean。true表示继续执行render方法，false表示放弃本次渲染。
+ 3、render():渲染组件。
+
+ 卸载过程
+
+ componentWillUnmount():将组件从dom树移除，防止内存泄漏。
+
+ ————————————————————————————————————————————————————————————
+
+ componentDidUpdate()： 这个生命周期的作用是当props或state更新之后，使用它更新DOM节点。如果使用不当，则查询页面会不停的调用查询的方法，不停的执行刷新操作。因此，需要给新增的方法增加一个标志，通过这个标志，判断，如果新增成功，则调用一次查询方法，否则，则不调用。
+
+ componentDidmount()：在子组件也都加载完毕后执行，在RN中就是指组件初始化加载完毕，在react中DOM渲染完成，此时就可以操作DOM了。
+
+
+
+ 参考资料：
+ https://segmentfault.com/a/1190000008165717
+
+
